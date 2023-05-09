@@ -6,7 +6,12 @@ import {
   Delete,
   Param,
   Body,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipeBuilder,
+  Res,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { PrismaService } from 'src/database/prisma.service';
 import { TypePesquisa } from 'src/dtos/pesquisa';
 
@@ -64,8 +69,28 @@ export class PesquisaController {
     return select;
   }
 
+  @Get('download/:id')
+  async getPesquisaDownload(@Param('id') id: string, @Res() res) {
+    const select = await this.prisma.pesquisa.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    return res.download(select.url_download, { root: 'uploads' });
+  }
+
   @Post()
-  async createPesquisa(@Body() body: TypePesquisa) {
+  @UseInterceptors(FileInterceptor('pdfFile'))
+  async createPesquisa(
+    @Body() body: TypePesquisa,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({ fileType: 'pdf' })
+        .build(),
+    )
+    file: Express.Multer.File,
+  ) {
     const {
       titulo,
       curso_id,
@@ -75,9 +100,7 @@ export class PesquisaController {
       discente_id,
       docente_id,
     } = body;
-
     const data = new Date(data_apresentacao);
-
     const create = await this.prisma.pesquisa.create({
       data: {
         titulo,
@@ -85,6 +108,7 @@ export class PesquisaController {
         palavras_chave,
         resumo,
         curso_id,
+        url_download: file.filename,
         discentes: {
           create: {
             discente_id,

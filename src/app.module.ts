@@ -7,9 +7,23 @@ import { DocenteController } from './controllers/docente.controller';
 import { DiscenteController } from './controllers/discente.controller';
 import { MatriculaController } from './controllers/matricula.controller';
 import { PesquisaController } from './controllers/pesquisa.controller';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { v4 } from 'uuid';
 
 @Module({
-  imports: [],
+  imports: [
+    MulterModule.registerAsync({
+      useFactory: () => ({
+        storage: diskStorage({
+          destination: './uploads',
+          filename(req, file, callback) {
+            return callback(null, `${v4()}.pdf`);
+          },
+        }),
+      }),
+    }),
+  ],
   controllers: [
     AppController,
     CampusController,

@@ -1,55 +1,13 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Param,
-  Body,
-} from '@nestjs/common';
-import { PrismaService } from 'src/database/prisma.service';
-import { TypeCurso } from 'src/dtos/curso';
+import { Injectable } from '@nestjs/common';
+import { CreateCursoDto } from './dto/create-curso.dto';
+import { UpdateCursoDto } from './dto/update-curso.dto';
+import { PrismaService } from '../../database/prisma.service';
 
-@Controller('curso')
-export class CursoController {
+@Injectable()
+export class CursoService {
   constructor(private prisma: PrismaService) {}
 
-  @Get()
-  async getCurso() {
-    const select = await this.prisma.curso.findMany();
-
-    return select;
-  }
-
-  @Get('all')
-  async getCursoAll() {
-    const select = await this.prisma.curso.findMany({
-      include: {
-        campus: true,
-        pesquisas: true,
-      },
-    });
-
-    return select;
-  }
-
-  @Get(':id')
-  async getCursoById(@Param('id') id: string) {
-    const select = await this.prisma.curso.findUnique({
-      where: {
-        id: id,
-      },
-      include: {
-        campus: true,
-        pesquisas: true,
-      },
-    });
-
-    return select;
-  }
-
-  @Post()
-  async createCurso(@Body() body: TypeCurso) {
+  async create(body: CreateCursoDto) {
     const { nome, grade, duracao, campus_id } = body;
 
     const create = await this.prisma.curso.create({
@@ -64,8 +22,38 @@ export class CursoController {
     return create;
   }
 
-  @Put(':id')
-  async updateCurso(@Param('id') id: string, @Body() body: TypeCurso) {
+  async findAll() {
+    const select = await this.prisma.curso.findMany();
+
+    return select;
+  }
+
+  async findAllJoin() {
+    const select = await this.prisma.curso.findMany({
+      include: {
+        campus: true,
+        pesquisas: true,
+      },
+    });
+
+    return select;
+  }
+
+  async findOne(id: CreateCursoDto['id']) {
+    const select = await this.prisma.curso.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        campus: true,
+        pesquisas: true,
+      },
+    });
+
+    return select;
+  }
+
+  async update(id: CreateCursoDto['id'], body: UpdateCursoDto) {
     const { nome, grade, duracao, campus_id } = body;
 
     const update = await this.prisma.curso.update({
@@ -83,8 +71,7 @@ export class CursoController {
     return update;
   }
 
-  @Delete(':id')
-  async deleteCurso(@Param('id') id: string) {
+  async remove(id: CreateCursoDto['id']) {
     const del = await this.prisma.curso.delete({
       where: {
         id: id,

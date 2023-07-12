@@ -1,6 +1,7 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class TypeDocente {
+export class CreateDocenteDto {
+  id: string;
   @IsNotEmpty({ message: 'O campo Nome é obrigatório' })
   nome: string;
   @IsNotEmpty({ message: 'O campo SIAPE é obrigatório' })

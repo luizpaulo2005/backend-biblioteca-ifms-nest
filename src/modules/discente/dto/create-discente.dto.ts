@@ -1,6 +1,7 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class TypeDiscente {
+export class CreateDiscenteDto {
+  id: string;
   @IsNotEmpty({ message: 'O campo Nome é obrigatório' })
   nome: string;
   @IsNotEmpty({ message: 'O campo Matrícula é obrigatória' })

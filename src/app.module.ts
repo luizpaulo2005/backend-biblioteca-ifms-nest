@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { PrismaService } from './database/prisma.service';
-import { CampusController } from './controllers/campus.controller';
-import { CursoController } from './controllers/curso.controller';
-import { DocenteController } from './controllers/docente.controller';
-import { DiscenteController } from './controllers/discente.controller';
-import { MatriculaController } from './controllers/matricula.controller';
-import { PesquisaController } from './controllers/pesquisa.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 } from 'uuid';
+
+import { CampusModule } from './modules/campus/campus.module';
+import { CursoModule } from './modules/curso/curso.module';
+import { DiscenteModule } from './modules/discente/discente.module';
+import { DocenteModule } from './modules/docente/docente.module';
+import { MatriculaModule } from './modules/matricula/matricula.module';
+import { PesquisaModule } from './modules/pesquisa/pesquisa.module';
 
 @Module({
   imports: [
@@ -23,16 +24,14 @@ import { v4 } from 'uuid';
         }),
       }),
     }),
+    CampusModule,
+    CursoModule,
+    DiscenteModule,
+    DocenteModule,
+    MatriculaModule,
+    PesquisaModule,
   ],
-  controllers: [
-    AppController,
-    CampusController,
-    CursoController,
-    DocenteController,
-    DiscenteController,
-    MatriculaController,
-    PesquisaController,
-  ],
+  controllers: [AppController],
   providers: [PrismaService],
 })
 export class AppModule {}

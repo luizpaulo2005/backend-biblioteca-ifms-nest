@@ -43,6 +43,11 @@ export class PesquisaController {
     return this.pesquisaService.findAllJoin();
   }
 
+  @Get('sumario')
+  findAllSumario() {
+    return this.pesquisaService.findAllSumario();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: CreatePesquisaDto['id']) {
     return this.pesquisaService.findOne(id);

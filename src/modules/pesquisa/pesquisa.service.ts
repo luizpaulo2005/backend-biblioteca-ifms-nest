@@ -77,6 +77,29 @@ export class PesquisaService {
     return select;
   }
 
+  async findAllSumario() {
+    const select = await this.prisma.pesquisa.findMany({
+      orderBy: {
+        data_apresentacao: 'desc',
+      },
+      include: {
+        discentes: {
+          select: {
+            discente: true,
+          },
+        },
+        docentes: {
+          select: {
+            docente: true,
+          },
+        },
+      },
+      take: 10,
+    });
+
+    return select;
+  }
+
   async findOne(id: CreatePesquisaDto['id']) {
     const select = await this.prisma.pesquisa.findUnique({
       where: {

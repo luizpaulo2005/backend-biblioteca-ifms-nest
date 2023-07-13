@@ -18,7 +18,11 @@ export class DiscenteService {
         email,
         cpf,
         data_nascimento: data,
-        matricula_id,
+        matriculas: {
+          create: {
+            matricula_id,
+          },
+        },
       },
     });
 
@@ -34,7 +38,7 @@ export class DiscenteService {
   async findAllJoin() {
     const select = await this.prisma.discente.findMany({
       include: {
-        matricula: true,
+        matriculas: true,
         pesquisas: true,
       },
     });
@@ -48,7 +52,7 @@ export class DiscenteService {
         id: id,
       },
       include: {
-        matricula: true,
+        matriculas: true,
         pesquisas: true,
       },
     });
@@ -70,7 +74,6 @@ export class DiscenteService {
         email,
         cpf,
         data_nascimento: data,
-        matricula_id,
       },
     });
 

@@ -53,12 +53,22 @@ export class PesquisaService {
       include: {
         discentes: {
           select: {
-            discente: true,
+            discente: {
+              select: {
+                id: true,
+                nome: true,
+              },
+            },
           },
         },
         docentes: {
           select: {
-            docente: true,
+            docente: {
+              select: {
+                id: true,
+                nome: true,
+              },
+            },
           },
         },
       },

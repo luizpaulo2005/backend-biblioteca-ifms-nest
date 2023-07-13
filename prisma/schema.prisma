@@ -48,13 +48,12 @@ model Docente {
 model Discente {
   id              String   @id @default(uuid())
   nome            String
-  matricula_id    String   @unique
   email           String
   data_nascimento DateTime
   cpf             String
 
-  pesquisas PesquisaDiscente[]
-  matricula Matricula          @relation(fields: [matricula_id], references: [id])
+  matriculas DiscenteMatricula[]
+  pesquisas  PesquisaDiscente[]
 
   @@map("discente")
 }
@@ -64,8 +63,8 @@ model Matricula {
   data_inicio DateTime
   curso_id    String
 
-  curso    Curso     @relation(fields: [curso_id], references: [id])
-  discente Discente?
+  curso    Curso              @relation(fields: [curso_id], references: [id])
+  discente DiscenteMatricula?
 
   @@map("matricula")
 }
@@ -75,7 +74,7 @@ model Pesquisa {
   titulo            String
   data_apresentacao DateTime
   resumo            String
-  palavras_chave    String
+  palavras_chave    String[]
   curso_id          String
   url_download      String   @default(uuid())
 
@@ -84,6 +83,17 @@ model Pesquisa {
   docentes  PesquisaDocente[]
 
   @@map("pesquisa")
+}
+
+model DiscenteMatricula {
+  discente_id  String
+  matricula_id String @unique
+
+  discente  Discente  @relation(fields: [discente_id], references: [id])
+  matricula Matricula @relation(fields: [matricula_id], references: [id])
+
+  @@id([discente_id, matricula_id])
+  @@map("discente_matricula")
 }
 
 model PesquisaDiscente {

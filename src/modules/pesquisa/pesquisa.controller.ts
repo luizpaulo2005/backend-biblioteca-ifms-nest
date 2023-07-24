@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   ParseFilePipeBuilder,
+  Res,
 } from '@nestjs/common';
 import { PesquisaService } from './pesquisa.service';
 import { CreatePesquisaDto } from './dto/create-pesquisa.dto';
@@ -46,6 +47,11 @@ export class PesquisaController {
   @Get('sumario')
   findAllSumario() {
     return this.pesquisaService.findAllSumario();
+  }
+
+  @Get('download/:id')
+  downloadPDF(@Param('id') id: CreatePesquisaDto['id'], @Res() res) {
+    return this.pesquisaService.downloadPDF(id, res);
   }
 
   @Get(':id')

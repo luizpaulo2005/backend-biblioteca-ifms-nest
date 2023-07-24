@@ -32,7 +32,16 @@ export class MatriculaService {
   async findAllJoin() {
     const select = await this.prisma.matricula.findMany({
       include: {
-        discente: true,
+        discente: {
+          select: {
+            discente: {
+              select: {
+                id: true,
+                nome: true,
+              },
+            },
+          },
+        },
         curso: true,
       },
     });
@@ -46,7 +55,16 @@ export class MatriculaService {
         id: id,
       },
       include: {
-        discente: true,
+        discente: {
+          select: {
+            discente: {
+              select: {
+                id: true,
+                nome: true,
+              },
+            },
+          },
+        },
         curso: true,
       },
     });

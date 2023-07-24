@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Res } from '@nestjs/common';
 import { CreatePesquisaDto } from './dto/create-pesquisa.dto';
 import { UpdatePesquisaDto } from './dto/update-pesquisa.dto';
 import { PrismaService } from '../../database/prisma.service';
@@ -120,6 +120,16 @@ export class PesquisaService {
     });
 
     return select;
+  }
+
+  async downloadPDF(id: UpdatePesquisaDto['id'], @Res() res) {
+    const select = await this.prisma.pesquisa.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    return res.download(select.url_download + '.pdf', { root: 'uploads' });
   }
 
   async update(id: UpdatePesquisaDto['id'], body: UpdatePesquisaDto) {
